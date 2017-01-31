@@ -20,12 +20,14 @@ def autoname_batch(self, method):
 """batch_creation through Stock Entry and Purchase Recipet"""
 def batch_creation(self, method):
 	for chld in self.items:
-		chld.batch_no = create_batch(chld.item_code)
+		chld.batch_no = create_batch(chld.item_code, chld)
 		
-def create_batch(item_code):
+def create_batch(item_code, chld):
 	batch = frappe.get_doc({
 		"doctype": "Batch",
-		"item": item_code
+		"item": item_code,
+		"production_date": chld.production_date if chld.production_date else "",
+		"expiry_date":  chld.expiry_date if chld.expiry_date else "" 
 		})
 	batch.flags.ignore_permissions = True
 	batch.insert()
