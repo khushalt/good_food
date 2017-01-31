@@ -1,0 +1,5 @@
+{
+	"js/good_friend_trading.min.js": [
+		"public/pos/pos.js"
+		]
+}

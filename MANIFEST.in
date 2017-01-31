@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include goodfood_trading *.css
+recursive-include goodfood_trading *.csv
+recursive-include goodfood_trading *.html
+recursive-include goodfood_trading *.ico
+recursive-include goodfood_trading *.js
+recursive-include goodfood_trading *.json
+recursive-include goodfood_trading *.md
+recursive-include goodfood_trading *.png
+recursive-include goodfood_trading *.py
+recursive-include goodfood_trading *.svg
+recursive-include goodfood_trading *.txt
+recursive-exclude goodfood_trading *.pyc
