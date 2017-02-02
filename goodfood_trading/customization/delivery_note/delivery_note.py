@@ -19,7 +19,6 @@ def batch_with_closest_expiration(item_code):
 		from `tabBatch` 
 		where item='{0}' 
 			and DATEDIFF(expiry_date, date(now())) >= 2""".format(item_code)
-	# frappe.errprint(query)
 	result = frappe.db.sql(query,as_dict=1)
 	return result
 
@@ -32,3 +31,15 @@ def batch_according_to_batch_no(item_code, batch_no):
 			and DATEDIFF(expiry_date, date(now())) >= 2 and batch_id ='{1}'""".format(item_code, batch_no)
 	result = frappe.db.sql(query,as_dict=1)
 	return result
+
+
+@frappe.whitelist()
+def pull_batch_no_accdording_to_barcode(barcode):
+	query = """SELECT `name`,`batch_id`, expiry_date, `production_date` as production_date, `item`, 
+		min(DATEDIFF(expiry_date, date(now()))) as diff 
+		from `tabBatch` 
+		where item in (select name from `tabItem` where barcode ='{0}') 
+			and DATEDIFF(expiry_date, date(now())) >= 2""".format(barcode)
+	result = frappe.db.sql(query,as_dict=1)
+	return result
+
