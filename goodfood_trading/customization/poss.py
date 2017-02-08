@@ -11,10 +11,6 @@ from erpnext.controllers.accounts_controller import get_taxes_and_charges
 
 @frappe.whitelist()
 def get_pos_data():
-	print """
-	setdefault
-	data
-	hello"""
 	doc = frappe.new_doc('Sales Invoice')
 	doc.is_pos = 1;
 	pos_profile = get_pos_profile(doc.company) or {}
@@ -31,7 +27,6 @@ def get_pos_data():
 	print_template = frappe.db.get_value('Print Format', default_print_format, 'html')
 
 	
-	# print m,"lllllllllll"
 	data = {
 		'doc': doc,
 		'default_customer': pos_profile.get('customer'),
@@ -48,9 +43,6 @@ def get_pos_data():
 		'meta': get_meta(),
 		'batches_exp_pro': batch_no_pro_exp(),
 	}
-	value = get_items_list(pos_profile)
-	# print data,"[---------dattadad--------]"
-	print value
 	return data
 def get_meta():
 	doctype_meta = {
@@ -185,7 +177,6 @@ def get_serial_no_data(pos_profile, company):
 		if sn.item_code not in itemwise_serial_no:
 			itemwise_serial_no.setdefault(sn.item_code, {})
 		itemwise_serial_no[sn.item_code][sn.name] = sn.warehouse
-	print itemwise_serial_no,"kkkkkkkk"	
 	return itemwise_serial_no
 
 def get_batch_no_data():
@@ -201,7 +192,6 @@ def get_batch_no_data():
 		if batch.item not in itemwise_batch:
 			itemwise_batch.setdefault(batch.item, [])
 		itemwise_batch[batch.item].append(batch.name)
-	print itemwise_batch,"--------------------"
 	return itemwise_batch
 
 def get_barcode_no_data():

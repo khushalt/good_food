@@ -20,7 +20,7 @@ frappe.pages['pos'].refresh = function(wrapper) {
 
 erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 	init: function(wrapper){
-		console.log("data")
+		// console.log("data")
 		this.page = wrapper.page;
 		this.wrapper = $(wrapper).find('.page-content');
 		this.set_indicator();
@@ -548,7 +548,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			if(me.frm.doc.docstatus==0) {
 				me.items = me.get_items($(this).attr("data-item-code"))
 				me.add_to_cart();
-				console.log(JSON.stringify(me.frm.doc))
+				// console.log(JSON.stringify(me.frm.doc))
 			}
 		});
 
@@ -612,7 +612,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			var item_idx = $(this).parents(".pos-bill-item").attr("item-idx");
 			var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
 			var item_obj = $(this).parents(".pos-bill-item")
-			console.log([batch_no, item_obj])
+			// console.log([batch_no, item_obj])
 			me.update_qty(item_code, qty, item_idx,batch_no)
 			// me.batch_according_to_batch_no(item_code, batch_no, item_obj)
 		})
@@ -672,7 +672,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 					})
 					item_obj.find(".pos-item-batch-pro").val(r.message[0]['production_date'])
 					item_obj.find(".pos-item-batch-exp").val(r.message[0]['expiry_date'])
-					console.log(JSON.stringify(me.frm.doc))
+					// console.log(JSON.stringify(me.frm.doc))
 					
 
 					}
@@ -741,7 +741,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 				idx++;
 			}
 		});
-		console.log(JSON.stringify(this.items))
+		// console.log(JSON.stringify(this.items))
 		this.frm.doc["items"] = this.items;
 	},
 
