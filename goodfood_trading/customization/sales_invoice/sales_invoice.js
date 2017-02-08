@@ -103,10 +103,12 @@ cur_frm.cscript.item_code= function(doc, cdt, cdn, from_barcode) {
 				args: {"item_code": item.item_code},
 				callback: function(r){
 					if (r.message){
-						item.batch_no =r.message[0]['batch_id']
-						item.expiry_date = r.message[0]['expiry_date']
-						item.production_date =r.message[0]['production_date']
-						refresh_field("items");
+							if(r.message['batches']){
+								item.batch_no =r.message['batches']['batch_id']
+								item.expiry_date = r.message['batches']['expiry_date']
+								item.production_date =r.message['batches']['production_date']
+								refresh_field("items");
+							}
 					}
 				}
 			})

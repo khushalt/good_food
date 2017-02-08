@@ -27,6 +27,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		this.onload();
 		this.make_menu_list();
 		this.si_docs = this.get_doc_from_localstorage();
+		this.item_counter =0
 	},
 
 	beforeunload: function(e){
@@ -531,6 +532,9 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		} else {
 			$("<h4>Searching record not found.</h4>").appendTo($wrap)
 		}
+		// this.frm.doc.counter
+		// this.item_counter = 0
+		// this.item_counter += this.frm.doc.counter
 
 		if(this.items.length == 1
 			&& this.search.$input.val()) {
@@ -544,6 +548,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			if(me.frm.doc.docstatus==0) {
 				me.items = me.get_items($(this).attr("data-item-code"))
 				me.add_to_cart();
+				console.log(JSON.stringify(me.frm.doc))
 			}
 		});
 
@@ -657,52 +662,25 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 				"batch_no": batch_no},
 			callback: function(r){
 				if (r.message){
-					// console.log("----hhhhhh------")
-					// console.log(JSON.stringify(me.child))
-					// console.log(JSON.stringify(me.child.production_date))
-					// console.log(JSON.stringify(me.child.expiry_date))
-					// console.log("---hhhhhhhhhhhh-------")
-					// console.log(r.message[0]['production_date'])
-					// console.log("----------")
-					// console.log(r.message[0]['expiry_date'])
+					$.each(me.frm.doc["items"] || [], function(i,d) {
+						if (d.item_code == item_code && d.item_counter == item_obj.attr("item-idx")){
+							d.batch_no =batch_no
+							d.production_date = r.message[0]['production_date']
+							d.expiry_date = r.message[0]['expiry_date']
+							
+						}
+					})
 					item_obj.find(".pos-item-batch-pro").val(r.message[0]['production_date'])
 					item_obj.find(".pos-item-batch-exp").val(r.message[0]['expiry_date'])
-
-					me.child.batch_no = batch_no
-					me.child.production_date = r.message[0]['production_date']
-					me.child.expiry_date = r.message[0]['expiry_date']
-
-					// console.log("---P J-------")
-					// console.log(JSON.stringify(me.child.production_date))
-					// console.log(JSON.stringify(me.child.expiry_date))
-
 					console.log(JSON.stringify(me.frm.doc))
-					// console.log(JSON.stringify(me.frm.doc["items"]))
+					
 
 					}
 				}
 			})
+	this.update_paid_amount_status(false)
 
 	},
-
-	// update_item_pro_exp_date: function(){
-	// 	var me = this;
-	// 	$.each(this.frm.doc["items"], function(n, item) {
-	// 		pricing_rule = me.get_pricing_rule(item)
-	// 		me.validate_pricing_rule(pricing_rule)
-	// 		if(pricing_rule.length){
-	// 			item.margin_type = pricing_rule[0].margin_type;
-	// 			item.price_list_rate = pricing_rule[0].price || item.price_list_rate;
-	// 			item.margin_rate_or_amount = pricing_rule[0].margin_rate_or_amount;
-	// 			item.discount_percentage = pricing_rule[0].discount_percentage || 0.0;
-	// 			me.apply_pricing_rule_on_item(item)
-	// 		} else if(item.discount_percentage > 0 || item.margin_rate_or_amount > 0) {
-	// 			item.margin_rate_or_amount = 0.0;
-	// 			item.discount_percentage = 0.0;
-	// 			me.apply_pricing_rule_on_item(item)
-	// 		}
-	// 	})
-	// },
 
 	update_qty: function(item_code, qty, item_idx, batch_no) {
 		
@@ -733,7 +711,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			if(d.serial_no && field == 'qty'){
 				me.validate_serial_no_qty(d, item_code, field, value)
 			}
-			if (d.item_code == item_code && d.idx == item_idx) {
+			if (d.item_code == item_code && d.item_counter == item_idx) {
 				d[field] = flt(value);
 				d.amount = flt(d.rate) * flt(d.qty);
 				if(d.qty==0){
@@ -801,9 +779,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 	add_to_cart: function() {
 
 		// this.counter = 0
-		this.frm.doc.counter = 0
-		this.item_counter = 0
-		this.item_counter += this.frm.doc.counter
+
 		var me = this;
 		var caught = false;
 		var no_of_items = me.wrapper.find(".pos-bill-item").length;
@@ -816,7 +792,6 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		// if (no_of_items != 0) {
 		// 	$.each(this.frm.doc["items"] || [], function(i, d) {
 		// 		if (d.item_code == me.items[0].item_code) {
-		// 			console.log("data.........")
 		// 			caught = true;
 		// 			d.qty += 1;
 		// 			d.amount = flt(d.rate) * flt(d.qty);
@@ -841,6 +816,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 
 	add_new_item_to_grid: function() {
 		console.log("inside if else ")
+		// this.child.batch_no = this.item_batch_no[this.child.item_code];
 		var me = this;
 		this.child = frappe.model.add_child(this.frm.doc, this.frm.doc.doctype + " Item", "items");
 		this.child.item_code = this.items[0].item_code;
@@ -857,14 +833,15 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		this.child.rate = flt(this.price_list_data[this.child.item_code], 9) / flt(this.frm.doc.conversion_rate, 9);
 		this.child.actual_qty = me.get_actual_qty(this.items[0]);
 		this.child.amount = flt(this.child.qty) * flt(this.child.rate);
-		this.child.batch_no = this.item_batch_no[this.child.item_code];
+		this.child.batch_no = me.batch_no_data[this.child.item_code] ? me.batches_exp_pro[this.child.item_code]['batch_id'] : "";
 		this.child.serial_no = (this.item_serial_no[this.child.item_code]
 			? this.item_serial_no[this.child.item_code][0] : '');
 		this.child.item_tax_rate = JSON.stringify(this.tax_data[this.child.item_code]);
 		this.child.production_date = me.batch_no_data[this.child.item_code] ? me.batches_exp_pro[this.child.item_code]['production_date'] : "";
 		this.child.expiry_date = me.batch_no_data[this.child.item_code] ? me.batches_exp_pro[this.child.item_code]['exp'] : "";
-		console.log("----------------------")
-		console.log(JSON.stringify(this.child))
+		this.child.item_counter = me.item_counter
+		this.frm.doc.counter++
+		this.item_counter = this.frm.doc.counter
 	},
 
 	update_paid_amount_status: function(update_paid_amount){
@@ -906,19 +883,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		var me = this;
 		var $items = this.wrapper.find(".items").empty();
 		$.each(this.frm.doc.items|| [], function(i, d) {
-			// console.log("0000000000")
-			// console.log([d.batch_no])
-			// console.log(me.batch_no_data[d.item_code] ? me.batch_no_data[d.item_code] :[])
-			console.log(JSON.stringify(d))
-			console.log(JSON.stringify(me.batches_exp_pro))
-			console.log(JSON.stringify("----------------------------"))
-			console.log(JSON.stringify(me.batches_exp_pro[d.item_code])) 
-
-			// expiry_date: me.batch_no_data[d.item_code] ? me.batches_exp_pro[d.item_code]['exp'] : "",
-			// production_date: me.batch_no_data[d.item_code] ? me.batches_exp_pro[d.item_code]['production_date'] :""
-			// console.log(JSON.stringify(me.child.production_date))
-			// console.log(JSON.stringify(me.child.expiry_date))
-
+			
 			$(frappe.render_template("pos_bill_item", {
 				item_code: d.item_code,
 				item_name: (d.item_name===d.item_code || !d.item_name) ? "" : ("<br>" + d.item_name),
@@ -928,9 +893,9 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 				rate: format_number(d.rate, me.frm.doc.currency),
 				enabled: me.pos_profile_data["allow_user_to_edit_rate"] ? true: false,
 				amount: format_currency(d.amount, me.frm.doc.currency),
-				idx:i,
+				idx:d.item_counter,
 				batches_no: me.batch_no_data[d.item_code] ? me.batch_no_data[d.item_code] :[],
-				batch :  me.batch_no_data[d.item_code] ? me.batches_exp_pro[d.item_code]['batch_id']:"",
+				batch :  me.batch_no_data[d.item_code] ? d.batch_no:"",
 				expiry_date: d.expiry_date ? d.expiry_date : "",
 				production_date: d.expiry_date ? d.production_date :""
 			})).appendTo($items);
