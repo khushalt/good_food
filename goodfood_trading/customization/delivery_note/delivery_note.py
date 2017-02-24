@@ -16,6 +16,7 @@ from datetime import timedelta
 def batch_with_closest_expiration(item_code):
 	query =frappe.db.sql("""SELECT `item`,`name`,`batch_id` as batch_id,  date(production_date) as production_date,
 	 date(expiry_date) expiry_date  from `tabBatch` where item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2""".format(item_code),as_dict=1)
+	print "query", query
 	batches ={}
 	d ={}      
 	for i in query:                    
@@ -23,6 +24,7 @@ def batch_with_closest_expiration(item_code):
 	for i in query:
 	    if i['expiry_date'] in d.values():
 	    	batches['batches'] =i
+	print batches, "ppppppppppp"
 	return batches
 
 @frappe.whitelist()
@@ -33,6 +35,7 @@ def batch_according_to_batch_no(item_code, batch_no):
 		where item='{0}' 
 			and DATEDIFF(expiry_date, date(now())) >= 2 and batch_id ='{1}'""".format(item_code, batch_no)
 	result = frappe.db.sql(query,as_dict=1)
+	print result,"============================"
 	return result
 
 

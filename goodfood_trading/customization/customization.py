@@ -19,16 +19,22 @@ def autoname_batch(self, method):
 
 """batch_creation through Stock Entry and Purchase Recipet"""
 def batch_creation(self, method):
-	for chld in self.items:
-		chld.batch_no = create_batch(chld.item_code, chld)
-		
+	if self.doctype == "Purchase Receipt":
+		for chld in self.items:
+			chld.batch_no = create_batch(chld.item_code, chld)
+	elif not self.update_stock and self.purpose == 'Material Receipt' and self.doctype == "Stock Entry":
+		for chld in self.items:
+			chld.batch_no = create_batch(chld.item_code, chld)
+
 def create_batch(item_code, chld):
-	batch = frappe.get_doc({
-		"doctype": "Batch",
-		"item": item_code,
-		"production_date": chld.production_date if chld.production_date else "",
-		"expiry_date":  chld.expiry_date if chld.expiry_date else "" 
-		})
-	batch.flags.ignore_permissions = True
-	batch.insert()
-	return batch.name
+	item = frappe.db.get_value("Item", {'name' : item_code}, 'has_batch_no', as_dict =True)
+	if item.get('has_batch_no') == 1:
+		batch = frappe.get_doc({
+			"doctype": "Batch",
+			"item": item_code,
+			"production_date": chld.production_date if chld.production_date else "",
+			"expiry_date":  chld.expiry_date if chld.expiry_date else "" 
+			})
+		batch.flags.ignore_permissions = True
+		batch.insert()
+		return batch.name

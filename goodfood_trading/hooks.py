@@ -81,7 +81,8 @@ page_js = {"pos" : "public/page/poss.js"}
 
 doctype_js = {
    "Delivery Note":["customization/delivery_note/delivery_note.js"],
-   "Sales Invoice":["customization/sales_invoice/sales_invoice.js"]
+   "Sales Invoice":["customization/sales_invoice/sales_invoice.js"],
+   "Stock Entry":["customization/stock_entry/stock_entry.js"]
 }
 
 doc_events = {
