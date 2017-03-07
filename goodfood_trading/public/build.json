@@ -5,5 +5,6 @@
 		"public/pos/pos_tax_row.html",
 		"public/pos/pos_bill_item.html",
 		"public/pos/pos_invoice_list.html"
+		
     ]
 }

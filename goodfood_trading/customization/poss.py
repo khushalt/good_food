@@ -187,7 +187,7 @@ def get_batch_no_data():
 	itemwise_batch = {}
 	batches = frappe.db.sql("""select name, item from `tabBatch`
 		where ifnull(expiry_date, '4000-10-10') >= curdate()""", as_dict=1)
-
+	print batches,"-------------------"
 	for batch in batches:
 		if batch.item not in itemwise_batch:
 			itemwise_batch.setdefault(batch.item, [])
@@ -330,3 +330,23 @@ def save_invoice(e, si_doc, name):
 		si_doc.docstatus = 0
 		si_doc.flags.ignore_mandatory = True
 		si_doc.insert()
+
+#Added By Khushal
+@frappe.whitelist()
+def return_query(filters,a,b,c,d,e):
+	# print "##############################FIRST",filters,"SECOND",a,"THIRD",b,"FOURTH",c,"FIFTH",d,"SIXTH",e
+	query=frappe.db.sql("""SELECT name, production_date, expiry_date 
+			from 
+				`tabBatch` 
+			where 
+				item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2 """.format(e['item_code']))
+	return query
+
+#Added By Khushal
+@frappe.whitelist()
+def get_data(batch_item):
+	dates,date=frappe.db.get_value("Batch",
+		{"name":batch_item},["production_date","expiry_date"])
+	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",dates,date
+	return dates,date
+	

@@ -28,7 +28,7 @@ def batch_with_closest_expiration(item_code):
 	return batches
 
 @frappe.whitelist()
-def batch_according_to_batch_no(item_code, batch_no):
+def batch_according_to_batch_no(item_code, batch_no=None):
 	query = """SELECT expiry_date, `production_date` as production_date, 
 		min(DATEDIFF(expiry_date, date(now()))) as diff 
 		from `tabBatch` 
