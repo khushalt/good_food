@@ -334,28 +334,11 @@ def save_invoice(e, si_doc, name):
 #Added By Khushal
 @frappe.whitelist()
 def return_query(filters,a,b,c,d,e):
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	# print "##############################FIRST",filters,"SECOND",a,"THIRD",b,"FOURTH",c,"FIFTH",d,"SIXTH",e
->>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
-=======
-	# print "##############################FIRST",filters,"SECOND",a,"THIRD",b,"FOURTH",c,"FIFTH",d,"SIXTH",e
->>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 	query=frappe.db.sql("""SELECT name, production_date, expiry_date 
 			from 
 				`tabBatch` 
 			where 
-<<<<<<< HEAD
-<<<<<<< HEAD
-				item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2 """
-				.format(e['item_code']))
-=======
 				item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2 """.format(e['item_code']))
->>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
-=======
-				item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2 """.format(e['item_code']))
->>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 	return query
 
 #Added By Khushal
@@ -363,13 +346,5 @@ def return_query(filters,a,b,c,d,e):
 def get_data(batch_item):
 	dates,date=frappe.db.get_value("Batch",
 		{"name":batch_item},["production_date","expiry_date"])
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",dates,date
->>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
-=======
-	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",dates,date
->>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 	return dates,date
 	
