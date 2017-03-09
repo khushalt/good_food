@@ -70,6 +70,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 	},
 
 	onload: function(){
+		console.log("######")
 		var me = this;
 		this.get_data_from_server(function(){
 			me.create_new();
@@ -300,7 +301,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		this.print_template = r.message.print_template;
 		this.pos_profile_data = r.message.pos_profile;
 		this.default_customer = r.message.default_customer || null;
-		this.batches_exp_pro = r.message.batches_exp_pro || null
+		this.batches_exp_pro = r.message.batches_exp_pro || null 
 		
 	},
 
@@ -368,7 +369,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 				"fieldtype": "Data",
 				"label": "Item",
 				"fieldname": "pos_item",
-				"placeholder": __("Search Item")
+				"placeholder": __("Search Item"),
 			},
 			parent: this.wrapper.find(".search-area"),
 			only_input: true,
@@ -383,6 +384,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		});
 
 		this.party_field = frappe.ui.form.make_control({
+
 			df: {
 				"fieldtype": "Data",
 				"options": this.party,
@@ -393,6 +395,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			parent: this.wrapper.find(".party-area"),
 			only_input: true,
 		});
+
 
 		this.party_field.make_input();
 		this.set_focus()
@@ -548,12 +551,11 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			if(me.frm.doc.docstatus==0) {
 				me.items = me.get_items($(this).attr("data-item-code"))
 				me.add_to_cart();
-				// console.log(JSON.stringify(me.frm.doc))
 			}
 		});
 
 
-		// console.log(me.frm.doc.counter)
+		
 	},
 
 
@@ -602,15 +604,18 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		}
 	},
 
+
 	bind_qty_event: function() {
 		var me = this;
-
+		
 		$(this.wrapper).find(".pos-item-qty").on("change", function(){
+
 			var item_code = $(this).parents(".pos-bill-item").attr("data-item-code");
 			var qty = $(this).val();
 			// me.update_qty(item_code, qty)
 			var item_idx = $(this).parents(".pos-bill-item").attr("item-idx");
-			var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
+			var batch_no = $(this).parents(".pos-bill-item").find(".batch-item-no").val();
+			// var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
 			var item_obj = $(this).parents(".pos-bill-item")
 			// console.log([batch_no, item_obj])
 			me.update_qty(item_code, qty, item_idx,batch_no)
@@ -624,9 +629,11 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			var item_idx = $(this).parents(".pos-bill-item").attr("item-idx");
 			// console.log([item_idx,"mmmmmmmmmmmm"])
 			me.update_qty(item_code, qty, item_idx, batch_no)
-			var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
+			var batch_no = $(this).parents(".pos-bill-item").find(".batch-item-no").val();
+			// var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
 			var item_obj = $(this).parents(".pos-bill-item")
-			// me.batch_according_to_batch_no(item_code, batch_no, item_obj)
+			// me.set_date(batch_no,item_idx)
+			me.batch_according_to_batch_no(item_code, batch_no, item_obj)
 		})
 
 		$(this.wrapper).find("[data-action='decrease-qty']").on("click", function(){
@@ -635,48 +642,61 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			// me.update_qty(item_code, qty)
 			var item_idx = $(this).parents(".pos-bill-item").attr("item-idx");
 			// console.log([item_idx,"mmmmmmmmmmmm"])
-			me.update_qty(item_code, qty, item_idx, batch_no)
-			var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
+			me.update_qty(item_code, qty, item_idx)
+			
+			var batch_no = $(this).parents(".pos-bill-item").find(".batch-item-no").val();
+			// var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
 			var item_obj = $(this).parents(".pos-bill-item")
 			me.batch_according_to_batch_no(item_code, batch_no, item_obj)
 		})
 
-		$(this.wrapper).find(".pos-item-batch-no").on("change click", function(){
+		// $(this.wrapper).find(".pos-item-batch-no").on("change click", function(){
+
+		// 	var item_code = $(this).parents(".pos-bill-item").attr("data-item-code");
+		// 	var batch_no = $(this).val();
+		// 	var item_obj = $(this).parents(".pos-bill-item")
+		// 	// var k =item_obj.find(".pos-item-batch-exp").text()
+		// 	// console.log(JSON.stringify(k));
+		// 	// alert($(this).val(), item_code);
+		// 	me.batch_according_to_batch_no(item_code, batch_no, item_obj)
+		// })
+		$(this.wrapper).find(".batch-item-no").on("change", function() {
+			// data = $(this).val();
+			// console.log([data,"hhhhhhhhhhhhhh"])
 			var item_code = $(this).parents(".pos-bill-item").attr("data-item-code");
 			var batch_no = $(this).val();
 			var item_obj = $(this).parents(".pos-bill-item")
-			// var k =item_obj.find(".pos-item-batch-exp").text()
-			// console.log(JSON.stringify(k));
-			// alert($(this).val(), item_code);
 			me.batch_according_to_batch_no(item_code, batch_no, item_obj)
 		})
 	},
-	
 	batch_according_to_batch_no: function(item_code, batch_no, item_obj) {
 		var me = this;
-		// console.log(batch_no)
-		// console.log("000000000000000")
+		console.log([item_code, batch_no, item_obj])
 		return frappe.call({
-			method:"goodfood_trading.customization.delivery_note.delivery_note.batch_according_to_batch_no",
-			args: {"item_code": item_code,
-				"batch_no": batch_no},
-			callback: function(r){
-				if (r.message){
-					$.each(me.frm.doc["items"] || [], function(i,d) {
-						if (d.item_code == item_code && d.item_counter == item_obj.attr("item-idx")){
-							d.batch_no =batch_no
-							d.production_date = r.message[0]['production_date']
-							d.expiry_date = r.message[0]['expiry_date']
-							
-						}
-					})
-					item_obj.find(".pos-item-batch-pro").val(r.message[0]['production_date'])
-					item_obj.find(".pos-item-batch-exp").val(r.message[0]['expiry_date'])
-					// console.log(JSON.stringify(me.frm.doc))
-					
+					method:"goodfood_trading.customization.delivery_note.delivery_note.batch_according_to_batch_no",
 
+					args: {"item_code": item_code,
+							"batch_no": batch_no
+					},
+					async:false,
+
+					callback: function(r){
+						if (r.message){
+							console.log([batch_no, r.message[0]['production_date'], r.message[0]['expiry_date']])
+							$.each(me.frm.doc["items"] || [], function(i,d) {
+								
+								if (d.item_code == item_code && d.item_counter == item_obj.attr("item-idx")){
+									d.batch_no =batch_no
+									d.production_date = r.message[0]['production_date']
+									d.expiry_date = r.message[0]['expiry_date']
+									
+								}
+							})
+							item_obj.find(".batch-item-no").val(batch_no)
+							item_obj.find(".pos-item-batch-pro").val(r.message[0]['production_date'])
+							item_obj.find(".pos-item-batch-exp").val(r.message[0]['expiry_date'])
+							}
 					}
-				}
 			})
 	this.update_paid_amount_status(false)
 
@@ -696,6 +716,8 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		$(this.wrapper).find(".pos-item-rate").on("change", function(){
 			var item_code = $(this).parents(".pos-bill-item").attr("data-item-code");
 			var item_idx = $(this).parents(".pos-bill-item").attr("item-idx");
+			var batch_no = $(this).parents(".pos-bill-item").attr("batch-no");
+			console.log("?????",batch_no,"",item_idx)
 			me.update_qty_rate_against_item_code(item_code, "rate", $(this).val(), item_idx, batch_no);
 		})
 	},
@@ -789,6 +811,7 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		this.validate_serial_no();
 		this.validate_warehouse();
 
+
 		// if (no_of_items != 0) {
 		// 	$.each(this.frm.doc["items"] || [], function(i, d) {
 		// 		if (d.item_code == me.items[0].item_code) {
@@ -815,8 +838,6 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 	},
 
 	add_new_item_to_grid: function() {
-		console.log("inside if else ")
-		// this.child.batch_no = this.item_batch_no[this.child.item_code];
 		var me = this;
 		this.child = frappe.model.add_child(this.frm.doc, this.frm.doc.doctype + " Item", "items");
 		this.child.item_code = this.items[0].item_code;
@@ -854,11 +875,16 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 
 	refresh: function(update_paid_amount) {
 		var me = this;
+
 		this.refresh_fields(update_paid_amount);
 		this.bind_qty_event();
+		// this.temp_fn();
 		this.update_rate();
 		this.set_primary_action();
+		// this.batch();
 	},
+
+
 
 	refresh_fields: function(update_paid_amount) {
 		this.apply_pricing_rule();
@@ -882,10 +908,10 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 	show_items_in_item_cart: function() {
 		var me = this;
 		var $items = this.wrapper.find(".items").empty();
+		
 		$.each(this.frm.doc.items|| [], function(i, d) {
-			
 			$(frappe.render_template("pos_bill_item", {
-				item_code: d.item_code,
+				 item_code: d.item_code,
 				item_name: (d.item_name===d.item_code || !d.item_name) ? "" : ("<br>" + d.item_name),
 				qty: d.qty,
 				actual_qty: me.actual_qty_dict[d.item_code] || 0,
@@ -899,6 +925,11 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 				expiry_date: d.expiry_date ? d.expiry_date : "",
 				production_date: d.expiry_date ? d.production_date :""
 			})).appendTo($items);
+			
+		 // Added By Khushal
+		 me.render_batch_no(d.item_counter, d.expiry_date,d.batch_no || "",d.item_code);
+		
+		  // me.get_batch_dates()
 		});
 
 		this.wrapper.find("input.pos-item-qty").on("focus", function() {
@@ -908,6 +939,11 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		this.wrapper.find("input.pos-item-rate").on("focus", function() {
 			$(this).select();
 		});
+
+		this.wrapper.find(".pos-batch").on("focus",function(){
+			$(this).select();
+		});
+		
 	},
 
 	set_taxes: function(){
@@ -1308,5 +1344,33 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		}
 
 		return this.actual_qty
-	}
+	},
+
+//Added By Khushal
+	render_batch_no:function(idx,expiry_date,batch_no,item_code){
+		var me=this;
+		this.batch_no = frappe.ui.form.make_control({
+			df: {
+				"fieldtype": "Link",
+				"options": "Batch",
+				"label": "Batch-no",
+				"fieldname": "Batch",
+				"placeholder": __("Batch"),
+				"input_class":"batch-item-no",
+				"get_query":function(){
+					return {
+						"query":"goodfood_trading.customization.poss.return_query",
+						filters:{
+							"item_code":item_code
+						}
+					}
+				}
+			},
+			parent: $('div[item-idx='+idx+']').find(".batch-no"),
+			only_input: true,
+		});
+		this.batch_no.make_input();
+		this.batch_no.$input.val(batch_no)
+	},
 })
+

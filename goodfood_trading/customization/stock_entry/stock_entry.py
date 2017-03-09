@@ -16,6 +16,7 @@ import json
 @frappe.whitelist()
 def get_item_details(args=None, for_update=False):
 		arg = json.loads(args)
+		#print"##############################",arg
 		item = frappe.db.sql("""select stock_uom, description, image, item_name,
 			expense_account, buying_cost_center, item_group from `tabItem`
 			where name = %s
@@ -25,8 +26,9 @@ def get_item_details(args=None, for_update=False):
 
 		query =frappe.db.sql("""SELECT `item`,`name`,`batch_id` as batch_no,  date(production_date) as production_date,
 			date(expiry_date) as expiry_date  from `tabBatch` where item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2""".format(arg.get('item_code')),as_dict=1)
-		# print arg.get('update_stock'), "mmmmmmmmmmmmmmmmm"
-		if item and arg.get('purpose') == 'Material Receipt' and arg.get('update_stock') == True:
+		#print "%%%%%%%%%%%%%%%%%%%%%%%%%%",query,"\n\n\n",item
+
+		if query and  item and arg.get('purpose') == 'Material Receipt' and arg.get('update_stock') == True:
 			batches ={}
 			d ={}      
 			for i in query:                    
@@ -34,6 +36,7 @@ def get_item_details(args=None, for_update=False):
 			for i in query:
 				if i['expiry_date'] in d.values():
 					batches['batches'] =i
+			print "$$$$$$$$$$$$$$$$",batches.get('batches')
 			item[0].update(batches.get('batches'))
 		
 		if not item:

@@ -22,9 +22,11 @@ def batch_creation(self, method):
 	if self.doctype == "Purchase Receipt":
 		for chld in self.items:
 			chld.batch_no = create_batch(chld.item_code, chld)
-	elif not self.update_stock and self.purpose == 'Material Receipt' and self.doctype == "Stock Entry":
+	elif not self.update_stock and (self.purpose == 'Material Receipt' or self.purpose=='Manufacture') and self.doctype == "Stock Entry":
 		for chld in self.items:
-			chld.batch_no = create_batch(chld.item_code, chld)
+			has_batch=frappe.db.get_value("Item",{"item_code":chld.item_code},["has_batch_no"])
+			if(has_batch==1):
+				chld.batch_no = create_batch(chld.item_code, chld)
 
 def create_batch(item_code, chld):
 	item = frappe.db.get_value("Item", {'name' : item_code}, 'has_batch_no', as_dict =True)

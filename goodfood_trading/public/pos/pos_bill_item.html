@@ -2,12 +2,8 @@
     <div class="col-xs-3"><h6>{%= item_code || "" %}{%= item_name || "" %}</h6></div>
     <div class="col-xs-3">
         <div class="row pos-batch-row">
-             <select type="text" autocomplete="off" style="margin-bottom: 1%;" class="form-control input-sm pos-item-batch-no text-right" id="batch_no" placeholder="Batch No" maxlength="140">
-                {% for(var i=0, l= batches_no.length; i<l; i++) { %}
-                    <option value="{%= batches_no[i] %}" item="{%= item_code %}" {%= batch == batches_no[i]? "Selected" : "" %}>{%=batches_no[i] %}</option>
-                {% } %}
-             </select>
-             <input type="text" value="{%= production_date%}" style="margin-bottom: 1%;" class="form-control input-sm pos-item-batch-pro  text-right" id="prod_date" placeholder="Production Date" readonly>
+            <div class="batch-no"></div>
+             <input type="text" name="Production date" value="{%= production_date%}" style="margin-bottom: 1%;" class="form-control input-sm pos-item-batch-pro  text-right" id="prod_date" placeholder="Production Date" readonly>
             <input type="text" value="{%= expiry_date %}" style="margin-bottom: 1%;" class="form-control input-sm pos-item-batch-exp text-right" id="Expi_date" placeholder="Expiration Date" readonly>
         </div>
     </div>
@@ -15,7 +11,7 @@
         <div class="row pos-qty-row">
             <div class="col-xs-2 text-center pos-qty-btn" data-action="decrease-qty"><i class="fa fa-minus text-muted" style="font-size:12px"></i></div>
             <div class="col-xs-8">
-				<div>
+                <div>
                     <input type="text" value="{%= qty %}" class="form-control input-sm pos-item-qty text-right">
                 </div>
                 {% if(actual_qty != null) { %}
@@ -29,12 +25,12 @@
     </div>
     <div class="col-xs-3 text-right">
         <div class="text-muted" style="margin-top: 5px;">
-			{% if(enabled) { %}
-				<input type="text" value="{%= rate %}" class="form-control input-sm pos-item-rate text-right">
-			{% } else { %}
-				<h6>{%= format_currency(rate) %}</h6>
-			{% } %}
-		</div>
-		<p><h6>{%= amount %}</h6></p>
+            {% if(enabled) { %}
+                <input type="text" value="{%= rate %}" class="form-control input-sm pos-item-rate text-right">
+            {% } else { %}
+                <h6>{%= format_currency(rate) %}</h6>
+            {% } %}
+        </div>
+        <p><h6>{%= amount %}</h6></p>
     </div>
 </div>

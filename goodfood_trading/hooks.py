@@ -90,7 +90,7 @@ doc_events = {
 		"before_insert": "goodfood_trading.customization.customization.autoname_batch"
 	},
 	"Stock Entry" :{
-		"before_insert": "goodfood_trading.customization.customization.batch_creation"
+		"before_submit": "goodfood_trading.customization.customization.batch_creation"
 	},
 	"Purchase Receipt" :{
 		"before_insert": "goodfood_trading.customization.customization.batch_creation"

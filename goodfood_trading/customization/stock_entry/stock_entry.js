@@ -29,15 +29,30 @@ frappe.ui.form.on("Stock Entry Detail", {
 			frappe.msgprint(__("Batch Qty After Reconciliation <b>{0}</b> should not be greater or equal than Actual Batch Qty <b>{1}</b>", [item.final_batch_qty , item.actual_batch_qty]));
 		}
 	},
+
+// Added BY Khushal
+	expiry_date:function(doc,cdt,cdn){
+		var d = locals[cdt][cdn]
+		var prod_date=new Date(d.production_date)
+		var exp_date=new Date(d.expiry_date)
+		if(prod_date>exp_date){
+		msgprint(__("Production date must not greater than Expiry Date"))
+		 	d.production_date=""
+		 	d.expiry_date=""
+		 	refresh_field("items")
+		}
+	}
 })
 
 frappe.ui.form.on("Stock Entry", {
 	update_stock: function(doc, cdt, cdn) {
 		if (cint(cur_frm.doc.update_stock)==1) {
+			  // hide_field(fild);
 			var df = frappe.meta.get_docfield("Stock Entry Detail","qty", cdn);
 			df.read_only = 1;
 		}
 		else {
+			//hide_field(child_fields);
 			var df = frappe.meta.get_docfield("Stock Entry Detail","qty", cdn);
 			df.read_only = 0;
 		}
@@ -46,6 +61,7 @@ frappe.ui.form.on("Stock Entry", {
 
 cur_frm.cscript.item_code= function(doc, cdt, cdn) {
 		/* Display batch_qty_reconciliation fields to reconcile batch qty */
+		chld_fld=['conversion_factor']
 		batch_qty_reconciliation = ['actual_batch_qty','final_batch_qty']
 		cur_frm.fields_dict['items'].grid.set_column_disp(batch_qty_reconciliation,
 		(cint(cur_frm.doc.update_stock)==1 ? true : false));
@@ -55,7 +71,7 @@ cur_frm.cscript.item_code= function(doc, cdt, cdn) {
 		cur_frm.fields_dict['items'].grid.toggle_reqd("final_batch_qty", (cint(cur_frm.doc.update_stock)==1 ? true : false));
 		
 		var d = locals[cdt][cdn];
-		console.log(JSON.stringify(d))
+		// console.log(JSON.stringify(d))
 		if(d.item_code) {
 			args = {
 				'item_code'			: d.item_code,
@@ -71,6 +87,7 @@ cur_frm.cscript.item_code= function(doc, cdt, cdn) {
 				'posting_time'		: cur_frm.doc.posting_time,
 				'purpose'			: cur_frm.doc.purpose,
 				'update_stock'		: cur_frm.doc.update_stock
+				
 			};
 			return frappe.call({
 				method: "goodfood_trading.customization.stock_entry.stock_entry.get_item_details",
@@ -80,7 +97,7 @@ cur_frm.cscript.item_code= function(doc, cdt, cdn) {
 						var d = locals[cdt][cdn];
 						$.each(r.message, function(k, v) {
 							d[k] = v;
-							console.log([k,v])
+							 // console.log("#####",[k,v])
 						});
 						// d.batch_no = "chair-00010"
 						refresh_field("items");
