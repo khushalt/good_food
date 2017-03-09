@@ -555,7 +555,10 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 				me.items = me.get_items($(this).attr("data-item-code"))
 				me.add_to_cart();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 				
 				// me.render_batch_no();
 				// console.log(JSON.stringify(me.frm.doc))
@@ -653,10 +656,13 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			// console.log([item_idx,"mmmmmmmmmmmm"])
 			me.update_qty(item_code, qty, item_idx)
 <<<<<<< HEAD
+<<<<<<< HEAD
 			
 			var batch_no = $(this).parents(".pos-bill-item").find(".batch-item-no").val();
 			// var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
 =======
+=======
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 			var batch_no = $(this).parents(".pos-bill-item").find(".pos-item-batch-no").val();
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 			var item_obj = $(this).parents(".pos-bill-item")
@@ -680,6 +686,9 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 =======
 		$(this.wrapper).find(".pos-item-batch-no").on("change click", function(){
 
+<<<<<<< HEAD
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
+=======
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 			var item_code = $(this).parents(".pos-bill-item").attr("data-item-code");
 			var batch_no = $(this).val();
@@ -694,6 +703,9 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 =======
 		// console.log(batch_no)
 		
+<<<<<<< HEAD
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
+=======
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 		return frappe.call({
 					method:"goodfood_trading.customization.delivery_note.delivery_note.batch_according_to_batch_no",
@@ -702,6 +714,10 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 							"batch_no": batch_no
 					},
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 =======
 
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
@@ -710,7 +726,11 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 					callback: function(r){
 						if (r.message){
 <<<<<<< HEAD
+<<<<<<< HEAD
 							console.log([batch_no, r.message[0]['production_date'], r.message[0]['expiry_date']])
+=======
+							
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 =======
 							
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
@@ -724,15 +744,21 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 								}
 							})
 <<<<<<< HEAD
+<<<<<<< HEAD
 							item_obj.find(".batch-item-no").val(batch_no)
 							item_obj.find(".pos-item-batch-pro").val(r.message[0]['production_date'])
 							item_obj.find(".pos-item-batch-exp").val(r.message[0]['expiry_date'])
 =======
+=======
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 							// item_obj.find(".pos-item-batch-pro").val(r.message[0]['production_date'])
 							// item_obj.find(".pos-item-batch-exp").val(r.message[0]['expiry_date'])
 							// console.log(JSON.stringify(me.frm.doc))
 							
 
+<<<<<<< HEAD
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
+=======
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 							}
 					}
@@ -966,12 +992,15 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 				production_date: d.expiry_date ? d.production_date :""
 			})).appendTo($items);
 <<<<<<< HEAD
+<<<<<<< HEAD
 			
 		 // Added By Khushal
 		 me.render_batch_no(d.item_counter, d.expiry_date,d.batch_no || "",d.item_code);
 		
 		  // me.get_batch_dates()
 =======
+=======
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 
 		
 			
@@ -979,6 +1008,9 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		 me.render_batch_no(d.item_counter,d.expiry_date,d.batch_no || "",d.item_code);
 		
 		 me.get_batch_dates()
+<<<<<<< HEAD
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
+=======
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 		});
 
@@ -1400,7 +1432,13 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 	render_batch_no:function(idx,expiry_date,batch_no,item_code){
 		var me=this;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		this.batch_no = frappe.ui.form.make_control({
+=======
+
+		this.batch_no = frappe.ui.form.make_control({
+
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 =======
 
 		this.batch_no = frappe.ui.form.make_control({
@@ -1426,10 +1464,13 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 			only_input: true,
 		});
 <<<<<<< HEAD
+<<<<<<< HEAD
 		this.batch_no.make_input();
 		this.batch_no.$input.val(batch_no)
 	},
 =======
+=======
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 
 		
 		// me.set_data(this.frm.doc.items,this.frm.doc.items[0].idx)
@@ -1476,6 +1517,9 @@ erpnext.pos.PointOfSale = erpnext.taxes_and_totals.extend({
 		var me=this;
 		
 	}
+<<<<<<< HEAD
+>>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
+=======
 >>>>>>> be7b8e7d97b865d7a4affc3a34cb3a8495a1328a
 })
 
