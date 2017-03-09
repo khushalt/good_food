@@ -9,6 +9,7 @@ from erpnext.stock.get_item_details import get_pos_profile
 from erpnext.accounts.party import get_party_account_currency
 from erpnext.controllers.accounts_controller import get_taxes_and_charges
 
+
 @frappe.whitelist()
 def get_pos_data():
 	doc = frappe.new_doc('Sales Invoice')
@@ -186,7 +187,7 @@ def get_batch_no_data():
 
 	itemwise_batch = {}
 	batches = frappe.db.sql("""select name, item from `tabBatch`
-		where ifnull(expiry_date, '4000-10-10') >= curdate()""", as_dict=1)
+		where ifnull(expiry_date, '4000-10-10') >= curdate() and (production_date is not null and expiry_date is not null)""", as_dict=1)
 	print batches,"-------------------"
 	for batch in batches:
 		if batch.item not in itemwise_batch:
@@ -333,18 +334,18 @@ def save_invoice(e, si_doc, name):
 
 #Added By Khushal
 @frappe.whitelist()
-def return_query(filters,a,b,c,d,e):
+def return_query(doctype, txt, searchfield, start, page_len, filter):
 	query=frappe.db.sql("""SELECT name, production_date, expiry_date 
 			from 
 				`tabBatch` 
 			where 
-				item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2 """.format(e['item_code']))
+				item='{0}' and DATEDIFF(expiry_date, date(now())) >= 2 """.format(filter['item_code']))
 	return query
 
 #Added By Khushal
 @frappe.whitelist()
 def get_data(batch_item):
-	dates,date=frappe.db.get_value("Batch",
+	prod_dates,exp_date=frappe.db.get_value("Batch",
 		{"name":batch_item},["production_date","expiry_date"])
-	return dates,date
+	return prod_dates,exp_date
 	

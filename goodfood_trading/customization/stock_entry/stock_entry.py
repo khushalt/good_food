@@ -13,6 +13,7 @@ from erpnext.manufacturing.doctype.bom.bom import validate_bom_no
 import json
 
 
+
 @frappe.whitelist()
 def get_item_details(args=None, for_update=False):
 		arg = json.loads(args)

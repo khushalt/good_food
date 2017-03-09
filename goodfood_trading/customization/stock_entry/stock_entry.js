@@ -123,4 +123,5 @@ cur_frm.cscript.batch_no= function(doc, cdt, cdn, item_code) {
 		         "fieldname": "actual_batch_qty"
 		    });
 		}
+
 }
