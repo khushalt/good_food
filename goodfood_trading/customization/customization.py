@@ -26,7 +26,11 @@ def batch_creation(self, method):
 		for chld in self.items:
 			has_batch=frappe.db.get_value("Item",{"item_code":chld.item_code},["has_batch_no"])
 			if(has_batch==1):
-				chld.batch_no = create_batch(chld.item_code, chld)
+				if(chld.production_date and chld.expiry_date):
+					chld.batch_no = create_batch(chld.item_code, chld)
+				else:
+					frappe.throw(_("Please Enter Production And Expiry Dates."))
+
 
 def create_batch(item_code, chld):
 	item = frappe.db.get_value("Item", {'name' : item_code}, 'has_batch_no', as_dict =True)
@@ -40,3 +44,9 @@ def create_batch(item_code, chld):
 		batch.flags.ignore_permissions = True
 		batch.insert()
 		return batch.name
+
+def get_remarkfield(self,method):
+	if self.voucher_type == "Stock Entry":
+		remark = frappe.db.get_value("Stock Entry Detail",{'name':self.voucher_detail_no},["remarks"])
+		self.remarks = remark
+	

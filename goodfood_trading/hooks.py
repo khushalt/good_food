@@ -94,6 +94,10 @@ doc_events = {
 	},
 	"Purchase Receipt" :{
 		"before_insert": "goodfood_trading.customization.customization.batch_creation"
+	},
+
+	"Stock Ledger Entry" :{
+		"before_submit": "goodfood_trading.customization.customization.get_remarkfield"
 	}
 }
 
